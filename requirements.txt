@@ -1,0 +1,5 @@
+pymupdf          # PDF extraction
+requests         # OpenRouter API calls
+# qdrant-client  # vector store (uncomment when building indexer)
+# rank-bm25      # BM25 keyword index (uncomment when building indexer)
+# openai         # optional: openai-compatible client for embeddings
