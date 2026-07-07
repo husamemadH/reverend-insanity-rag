@@ -10,11 +10,13 @@ from retriever import retrieve
 load_dotenv()
 
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
-GENERATION_MODEL = "anthropic/claude-haiku-4-5"
+DEFAULT_MODEL = "anthropic/claude-haiku-4-5"
 
 SYSTEM_PROMPT = """You are an expert on the web novel Reverend Insanity.
 Answer questions using only the provided context passages.
 If the context doesn't contain enough information, say so clearly.
+
+Give complete, well-explained answers — go beyond just stating facts, but stay focused and don't ramble.
 
 Respond with valid JSON only, in this exact format:
 {
@@ -48,7 +50,7 @@ def print_retrieved_chunks(chunks: list[dict]) -> None:
     print("------------------------\n")
 
 
-def ask(query: str, api_key: str, debug: bool = False) -> tuple[str, list[dict], list[str], list[dict]]:
+def ask(query: str, api_key: str, debug: bool = False, model: str = DEFAULT_MODEL) -> tuple[str, list[dict], list[str], list[dict]]:
     chunks, queries = retrieve(query, api_key, top_k=8)
     if debug:
         print(f"\n--- Rewritten Queries ---\n" + "\n".join(f"  {q}" for q in queries) + "\n")
@@ -65,7 +67,7 @@ def ask(query: str, api_key: str, debug: bool = False) -> tuple[str, list[dict],
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
     }
-    payload = {"model": GENERATION_MODEL, "messages": messages, "max_tokens": 700, "temperature": 0.7}
+    payload = {"model": model, "messages": messages, "max_tokens": 1000, "temperature": 0.7}
     response = requests.post(OPENROUTER_API_URL, headers=headers, json=payload)
     data = response.json()
     if "choices" not in data:

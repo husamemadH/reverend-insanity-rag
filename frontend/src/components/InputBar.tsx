@@ -1,13 +1,16 @@
 import { useState, type KeyboardEvent } from 'react'
+import { MODELS } from '../models'
 
 interface Props {
   onSend: (query: string) => void
   disabled: boolean
   debugMode: boolean
   onToggleDebug: () => void
+  model: string
+  onModelChange: (model: string) => void
 }
 
-export function InputBar({ onSend, disabled, debugMode, onToggleDebug }: Props) {
+export function InputBar({ onSend, disabled, debugMode, onToggleDebug, model, onModelChange }: Props) {
   const [value, setValue] = useState('')
 
   const handleSend = () => {
@@ -24,8 +27,26 @@ export function InputBar({ onSend, disabled, debugMode, onToggleDebug }: Props) 
     }
   }
 
+  const current = MODELS.find(m => m.id === model) ?? MODELS[0]
+
   return (
     <div className="input-bar">
+      <div className="model-selector-row">
+        <select
+          className="model-select"
+          value={model}
+          onChange={e => onModelChange(e.target.value)}
+          disabled={disabled}
+        >
+          {MODELS.map(m => (
+            <option key={m.id} value={m.id}>
+              {m.label} — {m.tag}
+            </option>
+          ))}
+        </select>
+        <span className="model-tag">{current.tag}</span>
+      </div>
+
       <div className="input-wrap">
         <textarea
           className="input-field"

@@ -5,7 +5,7 @@ from pathlib import Path
 
 # OpenRouter config
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
-SUMMARY_MODEL = "meta-llama/llama-3.3-70b-instruct"
+SUMMARY_MODEL = "google/gemini-2.5-flash"
 
 SUMMARY_PROMPT = """Summarize this chapter of Reverend Insanity in 3-5 sentences.
 Focus on: key plot events, Gu worms used or obtained, characters involved, faction developments.

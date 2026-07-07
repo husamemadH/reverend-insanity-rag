@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 load_dotenv()
 
-from app import ask
+from app import ask, DEFAULT_MODEL
 
 server = FastAPI()
 server.add_middleware(
@@ -20,6 +20,7 @@ server.add_middleware(
 
 class ChatRequest(BaseModel):
     query: str
+    model: str = DEFAULT_MODEL
 
 
 class Citation(BaseModel):
@@ -45,7 +46,7 @@ def chat(req: ChatRequest) -> ChatResponse:
     api_key = os.environ.get("OPENROUTER_API_KEY", "")
     if not api_key:
         raise HTTPException(status_code=500, detail="OPENROUTER_API_KEY not set")
-    answer, citations_raw, queries, raw_chunks = ask(req.query, api_key)
+    answer, citations_raw, queries, raw_chunks = ask(req.query, api_key, model=req.model)
     citations = [
         Citation(chapter=c.get("chapter", 0), quote=c.get("quote", ""))
         for c in citations_raw

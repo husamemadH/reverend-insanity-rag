@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import type { Message as MsgType, Citation, Chunk } from './types'
 import { Message } from './components/Message'
 import { InputBar } from './components/InputBar'
+import { DEFAULT_MODEL_ID, MODELS } from './models'
 import './App.css'
 
 let msgId = 0
@@ -11,6 +12,7 @@ export default function App() {
   const [messages, setMessages] = useState<MsgType[]>([])
   const [loading, setLoading] = useState(false)
   const [debugMode, setDebugMode] = useState(false)
+  const [model, setModel] = useState(DEFAULT_MODEL_ID)
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -29,7 +31,7 @@ export default function App() {
       const res = await fetch('/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ query, model }),
       })
       if (!res.ok) throw new Error(`API error ${res.status}`)
       const data = await res.json()
@@ -67,6 +69,7 @@ export default function App() {
         <div className="header-title">
           <span className="header-icon">☯</span>
           Reverend Insanity — Gu Oracle
+          <span className="header-model">{MODELS.find(m => m.id === model)?.label}</span>
         </div>
         {debugMode && <span className="debug-badge">Debug ON</span>}
       </header>
@@ -89,6 +92,8 @@ export default function App() {
         disabled={loading}
         debugMode={debugMode}
         onToggleDebug={() => setDebugMode(d => !d)}
+        model={model}
+        onModelChange={setModel}
       />
     </div>
   )

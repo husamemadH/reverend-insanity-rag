@@ -15,3 +15,7 @@ wheels/
 # novel chapters pdfs
 
 data/
+
+# personal notes
+code_reading.md
+models.md
