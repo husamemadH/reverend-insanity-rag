@@ -8,18 +8,19 @@ Usage:
 
 import json
 import os
+
 from dotenv import load_dotenv
-from extract import extract_chapters
 
 load_dotenv()
+
+from extract import extract_chapters
 from summarizer import load_or_generate_summaries
 from chunker import chunk_chapter
 from indexer import build_vector_index, build_bm25_index
 
 # --- config ---
 PDF_PATHS = [
-    "data/ri_10_chapters.pdf",
-    # "data/Reverend_Insanity_vol_2.pdf",  # add more volumes here
+    "data/RI_vol1.pdf",
 ]
 SUMMARIES_CACHE = "summaries.json"
 TOKEN_BUDGET = 900
